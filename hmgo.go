@@ -13,6 +13,8 @@ var (
 	ErrNotFound = errors.New("not found")
 )
 
+type D map[string]interface{}
+
 func getMgoSession() *mgo.Session {
 	return mgoSession.Clone()
 }
@@ -156,7 +158,6 @@ func (c *Client) Update(selector, update interface{}) error {
 	return nil
 }
 
-// Delete a single doc by selector
 func (c *Client) Delete(selector interface{}) error {
 	if err := c.Collection.Remove(selector); err != nil {
 		return err
@@ -164,7 +165,6 @@ func (c *Client) Delete(selector interface{}) error {
 	return nil
 }
 
-// Delete all docs by selector
 func (c *Client) DeleteAll(selector interface{}) error {
 	if _, err := c.Collection.RemoveAll(selector); err != nil {
 		return err
