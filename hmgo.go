@@ -102,19 +102,19 @@ func (c *Client) Save(docId, doc interface{}) error {
 	return nil
 }
 
-func (c *Client) Query(query, selector, records interface{}) error {
-	if err := c.Collection.Find(query).Select(selector).All(records); err != nil {
+func (c *Client) QueryOne(query, selector, records interface{}) error {
+	if err := c.Collection.Find(query).Select(selector).One(records); err != nil {
+		if err == mgo.ErrNotFound {
+			return ErrNotFound
+		}
 		return err
 	}
 
 	return nil
 }
 
-func (c *Client) QueryOne(query, selector, records interface{}) error {
-	if err := c.Collection.Find(query).Select(selector).One(records); err != nil {
-		if err == mgo.ErrNotFound {
-			return ErrNotFound
-		}
+func (c *Client) Query(query, selector, records interface{}) error {
+	if err := c.Collection.Find(query).Select(selector).All(records); err != nil {
 		return err
 	}
 
@@ -160,9 +160,6 @@ func (c *Client) UpdateOne(selector, update interface{}) error {
 
 func (c *Client) UpdateMany(selector, update interface{}) error {
 	if _, err := c.Collection.UpdateAll(selector, update); err != nil {
-		if err == mgo.ErrNotFound {
-			return ErrNotFound
-		}
 		return err
 	}
 
@@ -171,6 +168,9 @@ func (c *Client) UpdateMany(selector, update interface{}) error {
 
 func (c *Client) DeleteOne(selector interface{}) error {
 	if err := c.Collection.Remove(selector); err != nil {
+		if err == mgo.ErrNotFound {
+			return ErrNotFound
+		}
 		return err
 	}
 	return nil

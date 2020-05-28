@@ -106,7 +106,7 @@ func TestUpdateMany(t *testing.T) {
 	}
 
 	m := New("test", "user")
-	if err := m.UpdateMany(nil, D{"$set": D{"address": "上海"}}); err != nil {
+	if err := m.UpdateMany(nil, D{"$set": D{"address1": "上海"}}); err != nil {
 		t.Error(err)
 	}
 
