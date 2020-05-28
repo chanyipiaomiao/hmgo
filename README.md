@@ -35,6 +35,8 @@ func main() {
 	}
 
 	m := hmgo.New("test", "user")
+	defer m.Close()
+
 	for _, user := range users {
 		if err := m.Save(hmgo.NewObjectId(), user); err != nil {
 			fmt.Println(err)

@@ -26,6 +26,7 @@ func TestInsert(t *testing.T) {
 		{Username: "mutouliu", Name: "木头六", Age: 37, Address: "上海"},
 	}
 	m := New("test2", "user")
+	defer m.Close()
 	for _, user := range users {
 		if err := m.Save(NewObjectId(), user); err != nil {
 			t.Error(err)
@@ -41,11 +42,14 @@ func TestQueryOne(t *testing.T) {
 		return
 	}
 	m := New("test", "user")
+	defer m.Close()
+
 	var user User
 	if err := m.QueryOne(D{"username": "zhangsan"}, nil, &user); err != nil {
 		t.Error(err)
 		return
 	}
+
 	fmt.Println(user)
 }
 
@@ -56,6 +60,7 @@ func TestQuery(t *testing.T) {
 	}
 
 	m := New("test", "user")
+	defer m.Close()
 
 	var users []*User
 	if err := m.Query(nil, nil, &users); err != nil {
@@ -74,6 +79,8 @@ func TestQueryWithPage(t *testing.T) {
 		return
 	}
 	m := New("test", "user")
+	defer m.Close()
+
 	var userp []*User
 	page, err := m.QueryWithPage(nil, nil, &userp, 1, 1)
 	if err != nil {
@@ -93,6 +100,8 @@ func TestUpdateOne(t *testing.T) {
 	}
 
 	m := New("test", "user")
+	defer m.Close()
+
 	if err := m.UpdateOne(D{"username": "zhangsan"}, D{"$set": D{"age": 28}}); err != nil {
 		t.Error(err)
 	}
@@ -106,6 +115,8 @@ func TestUpdateMany(t *testing.T) {
 	}
 
 	m := New("test", "user")
+	defer m.Close()
+
 	if err := m.UpdateMany(nil, D{"$set": D{"address1": "上海"}}); err != nil {
 		t.Error(err)
 	}
@@ -119,6 +130,8 @@ func TestDeleteOne(t *testing.T) {
 	}
 
 	m := New("test", "user")
+	defer m.Close()
+
 	if err := m.DeleteOne(D{"username": "wangwu"}); err != nil {
 		t.Error(err)
 	}
@@ -131,6 +144,8 @@ func TestDeleteMany(t *testing.T) {
 	}
 
 	m := New("test", "user")
+	defer m.Close()
+
 	if err := m.DeleteMany(D{"username": "zhangsan"}); err != nil {
 		t.Error(err)
 	}
