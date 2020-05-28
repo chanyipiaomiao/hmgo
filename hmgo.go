@@ -147,7 +147,7 @@ func (c *Client) QueryWithPage(query, selector, records interface{},
 	return &page, nil
 }
 
-func (c *Client) Update(selector, update interface{}) error {
+func (c *Client) UpdateOne(selector, update interface{}) error {
 	if err := c.Collection.Update(selector, update); err != nil {
 		if err == mgo.ErrNotFound {
 			return ErrNotFound
@@ -158,14 +158,25 @@ func (c *Client) Update(selector, update interface{}) error {
 	return nil
 }
 
-func (c *Client) Delete(selector interface{}) error {
+func (c *Client) UpdateMany(selector, update interface{}) error {
+	if _, err := c.Collection.UpdateAll(selector, update); err != nil {
+		if err == mgo.ErrNotFound {
+			return ErrNotFound
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) DeleteOne(selector interface{}) error {
 	if err := c.Collection.Remove(selector); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) DeleteAll(selector interface{}) error {
+func (c *Client) DeleteMany(selector interface{}) error {
 	if _, err := c.Collection.RemoveAll(selector); err != nil {
 		return err
 	}
